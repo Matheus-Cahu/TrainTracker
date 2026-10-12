@@ -46,6 +46,10 @@ export default function CalendarScreen() {
     ...Array<null>(month.getDay()).fill(null),
     ...Array.from({ length: daysInMonth }, (_, i) => i + 1),
   ];
+  // Explicit rows of seven: percentage widths round up on some screens and wrap early.
+  const weeks = Array.from({ length: Math.ceil(cells.length / 7) }, (_, w) =>
+    Array.from({ length: 7 }, (_, d) => cells[w * 7 + d] ?? null)
+  );
 
   const changeMonth = (delta: number) =>
     setMonth(new Date(month.getFullYear(), month.getMonth() + delta, 1));
@@ -73,7 +77,7 @@ export default function CalendarScreen() {
           <IconButton icon="chevronRight" label="Próximo mês" onPress={() => changeMonth(1)} />
         </View>
 
-        <View style={styles.grid}>
+        <View style={styles.week}>
           {WEEKDAY_INITIALS.map((initial, i) => (
             <View key={i} style={styles.cell}>
               <ThemedText type="small" themeColor="textSecondary">
@@ -81,32 +85,40 @@ export default function CalendarScreen() {
               </ThemedText>
             </View>
           ))}
-          {cells.map((day, i) => {
-            if (day === null) return <View key={i} style={styles.cell} />;
-            const key = `${monthKey}-${String(day).padStart(2, '0')}`;
-            const trained = trainedDays.has(key);
-            const isSelected = key === selected;
-            return (
-              <Pressable
-                key={i}
-                accessibilityLabel={`Dia ${day}${trained ? ', treinou' : ''}`}
-                onPress={() => setSelected(key)}
-                style={styles.cell}>
-                <View
-                  style={[
-                    styles.day,
-                    trained && { backgroundColor: theme.tint },
-                    key === todayKey && { borderWidth: 2, borderColor: theme.textSecondary },
-                    isSelected && { borderWidth: 2, borderColor: theme.text },
-                  ]}>
-                  <ThemedText type="small" style={trained && { color: theme.onTint }}>
-                    {day}
-                  </ThemedText>
-                </View>
-              </Pressable>
-            );
-          })}
         </View>
+        {weeks.map((week, w) => (
+          <View key={w} style={styles.week}>
+            {week.map((day, d) => {
+              if (day === null) return <View key={d} style={styles.cell} />;
+              const key = `${monthKey}-${String(day).padStart(2, '0')}`;
+              const trained = trainedDays.has(key);
+              const borderColor =
+                key === selected
+                  ? theme.text
+                  : key === todayKey
+                    ? theme.textSecondary
+                    : 'transparent';
+              return (
+                <Pressable
+                  key={d}
+                  accessibilityLabel={`Dia ${day}${trained ? ', treinou' : ''}`}
+                  onPress={() => setSelected(key)}
+                  style={styles.cell}>
+                  <View
+                    style={[
+                      styles.day,
+                      { borderColor },
+                      trained && { backgroundColor: theme.tint },
+                    ]}>
+                    <ThemedText type="small" style={trained && { color: theme.onTint }}>
+                      {day}
+                    </ThemedText>
+                  </View>
+                </Pressable>
+              );
+            })}
+          </View>
+        ))}
       </Card>
 
       <ThemedText type="smallBold" themeColor="textSecondary">
@@ -141,20 +153,19 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
   },
-  grid: {
+  week: {
     flexDirection: 'row',
-    flexWrap: 'wrap',
   },
   cell: {
-    width: `${100 / 7}%`,
-    aspectRatio: 1,
+    flex: 1,
     alignItems: 'center',
-    justifyContent: 'center',
+    paddingVertical: Spacing.one,
   },
   day: {
     width: 36,
     height: 36,
     borderRadius: 18,
+    borderWidth: 2,
     alignItems: 'center',
     justifyContent: 'center',
   },
