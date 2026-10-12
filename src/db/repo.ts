@@ -1,5 +1,6 @@
 import type { SQLiteDatabase } from 'expo-sqlite';
 
+import { AccentColors, DEFAULT_ACCENT, type AccentName, type ThemeMode } from '@/constants/theme';
 import type {
   Exercise,
   ExerciseInput,
@@ -17,8 +18,12 @@ export const DEFAULT_REST_SECONDS = 60;
 export async function getSettings(db: SQLiteDatabase): Promise<Settings> {
   const rows = await db.getAllAsync<{ key: string; value: string }>('SELECT key, value FROM settings');
   const map = new Map(rows.map((r) => [r.key, r.value]));
+  const themeMode = map.get('theme_mode');
+  const accent = map.get('accent');
   return {
     restSeconds: Number(map.get('rest_seconds') ?? DEFAULT_REST_SECONDS),
+    themeMode: themeMode === 'light' || themeMode === 'dark' ? themeMode : 'system',
+    accent: accent && accent in AccentColors ? (accent as AccentName) : DEFAULT_ACCENT,
     mapImage: map.get('map_image') ?? null,
     mapWidth: Number(map.get('map_width') ?? 1),
     mapHeight: Number(map.get('map_height') ?? 1),
@@ -39,6 +44,14 @@ async function setSetting(db: SQLiteDatabase, key: string, value: string | null)
 
 export function setRestSeconds(db: SQLiteDatabase, seconds: number) {
   return setSetting(db, 'rest_seconds', String(seconds));
+}
+
+export function setThemeMode(db: SQLiteDatabase, mode: ThemeMode) {
+  return setSetting(db, 'theme_mode', mode);
+}
+
+export function setAccent(db: SQLiteDatabase, accent: AccentName) {
+  return setSetting(db, 'accent', accent);
 }
 
 export async function setMapImage(

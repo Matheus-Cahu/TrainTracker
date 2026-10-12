@@ -1,7 +1,9 @@
+import { useRouter } from 'expo-router';
 import { useSQLiteContext } from 'expo-sqlite';
 import { StyleSheet, View } from 'react-native';
 
 import { GymMap } from '@/components/gym-map';
+import { Icon } from '@/components/icon';
 import { ThemedText } from '@/components/themed-text';
 import { Button, IconButton } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
@@ -19,6 +21,7 @@ const REST_MAX = 600;
 
 export default function SettingsScreen() {
   const db = useSQLiteContext();
+  const router = useRouter();
   const { data: settings, reload } = useFocusQuery(getSettings);
   if (!settings) return <TabScreen title="Configurações">{null}</TabScreen>;
 
@@ -52,6 +55,16 @@ export default function SettingsScreen() {
 
   return (
     <TabScreen title="Configurações">
+      <Card style={styles.link} onPress={() => router.push('/appearance')}>
+        <View style={styles.linkInfo}>
+          <ThemedText type="smallBold">Visual</ThemedText>
+          <ThemedText type="small" themeColor="textSecondary">
+            Tema claro ou escuro e cor de destaque.
+          </ThemedText>
+        </View>
+        <Icon name="chevronRight" />
+      </Card>
+
       <Card>
         <ThemedText type="smallBold">Tempo de descanso</ThemedText>
         <ThemedText type="small" themeColor="textSecondary">
@@ -99,6 +112,15 @@ export default function SettingsScreen() {
 }
 
 const styles = StyleSheet.create({
+  link: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: Spacing.three,
+  },
+  linkInfo: {
+    flex: 1,
+    gap: Spacing.half,
+  },
   stepper: {
     flexDirection: 'row',
     alignItems: 'center',

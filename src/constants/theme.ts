@@ -38,6 +38,23 @@ export const Colors = {
 
 export type ThemeColor = keyof typeof Colors.light & keyof typeof Colors.dark;
 
+/** Choices for the highlight color (`tint`), tuned per scheme to keep white text readable. */
+export const AccentColors = {
+  blue: { label: 'Azul', light: '#208AEF', dark: '#4BA3F5' },
+  red: { label: 'Vermelho', light: '#D92D2D', dark: '#F05252' },
+  orange: { label: 'Laranja', light: '#DD5B0B', dark: '#F27A30' },
+  green: { label: 'Verde', light: '#2B9A4B', dark: '#3DB866' },
+  teal: { label: 'Turquesa', light: '#0C8F9C', dark: '#1FB2BF' },
+  purple: { label: 'Roxo', light: '#7C4DDB', dark: '#9B74EE' },
+  pink: { label: 'Rosa', light: '#D6409F', dark: '#E660B2' },
+} as const;
+
+export type AccentName = keyof typeof AccentColors;
+export const DEFAULT_ACCENT: AccentName = 'blue';
+
+/** `system` follows the device setting. */
+export type ThemeMode = 'system' | 'light' | 'dark';
+
 export const Fonts = Platform.select({
   ios: {
     /** iOS `UIFontDescriptorSystemDesignDefault` */

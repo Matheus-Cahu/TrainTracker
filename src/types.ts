@@ -1,3 +1,5 @@
+import type { AccentName, ThemeMode } from '@/constants/theme';
+
 export type Workout = {
   id: number;
   name: string;
@@ -53,6 +55,8 @@ export type Reminder = {
 
 export type Settings = {
   restSeconds: number;
+  themeMode: ThemeMode;
+  accent: AccentName;
   mapImage: string | null;
   mapWidth: number;
   mapHeight: number;
