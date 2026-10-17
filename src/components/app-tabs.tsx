@@ -20,6 +20,11 @@ export default function AppTabs() {
         <NativeTabs.Trigger.Icon sf="calendar" md="calendar_month" />
       </NativeTabs.Trigger>
 
+      <NativeTabs.Trigger name="progress">
+        <NativeTabs.Trigger.Label>Progresso</NativeTabs.Trigger.Label>
+        <NativeTabs.Trigger.Icon sf="chart.line.uptrend.xyaxis" md="monitoring" />
+      </NativeTabs.Trigger>
+
       <NativeTabs.Trigger name="reminders">
         <NativeTabs.Trigger.Label>Notificações</NativeTabs.Trigger.Label>
         <NativeTabs.Trigger.Icon sf="bell" md="notifications" />

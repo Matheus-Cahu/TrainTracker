@@ -41,6 +41,7 @@ function Navigation() {
         <Stack.Screen name="exercise/[id]" options={{ title: 'Exercício' }} />
         <Stack.Screen name="reminder/[id]" options={{ title: 'Lembrete' }} />
         <Stack.Screen name="session/[id]" options={{ title: 'Treino', gestureEnabled: false }} />
+        <Stack.Screen name="timelapse" options={{ title: 'Evolução' }} />
         <Stack.Screen name="appearance" options={{ title: 'Visual' }} />
       </Stack>
     </ThemeProvider>

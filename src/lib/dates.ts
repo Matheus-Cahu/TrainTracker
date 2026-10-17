@@ -22,6 +22,11 @@ export function toDateKey(date: Date) {
   return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
 }
 
+/** `DD/MM/YYYY` for a `YYYY-MM-DD` day. */
+export function formatDateKey(key: string) {
+  return key.split('-').reverse().join('/');
+}
+
 export function formatTime(hour: number, minute: number) {
   return `${pad(hour)}:${pad(minute)}`;
 }

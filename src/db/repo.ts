@@ -4,9 +4,11 @@ import { AccentColors, DEFAULT_ACCENT, type AccentName, type ThemeMode } from '@
 import type {
   Exercise,
   ExerciseInput,
+  ProgressPhoto,
   Reminder,
   Session,
   Settings,
+  WeightEntry,
   Workout,
   WorkoutSummary,
 } from '@/types';
@@ -299,4 +301,45 @@ export async function setReminderTaken(
   } else {
     await db.runAsync('DELETE FROM reminder_logs WHERE reminder_id = ? AND date = ?', id, date);
   }
+}
+
+// Progress
+
+export function listWeights(db: SQLiteDatabase) {
+  return db.getAllAsync<WeightEntry>('SELECT date, kg FROM weights ORDER BY date');
+}
+
+/** Each day holds a single weight: logging again replaces it. */
+export async function setWeight(db: SQLiteDatabase, date: string, kg: number) {
+  await db.runAsync(
+    'INSERT INTO weights (date, kg) VALUES (?, ?) ON CONFLICT(date) DO UPDATE SET kg = excluded.kg',
+    date,
+    kg
+  );
+}
+
+export async function deleteWeight(db: SQLiteDatabase, date: string) {
+  await db.runAsync('DELETE FROM weights WHERE date = ?', date);
+}
+
+export function listProgressPhotos(db: SQLiteDatabase) {
+  return db.getAllAsync<ProgressPhoto>('SELECT date, photo FROM progress_photos ORDER BY date');
+}
+
+/** Each day holds a single photo. Returns the photo it replaced, which is no longer referenced. */
+export async function setProgressPhoto(db: SQLiteDatabase, date: string, photo: string) {
+  const previous = await db.getFirstAsync<{ photo: string }>(
+    'SELECT photo FROM progress_photos WHERE date = ?',
+    date
+  );
+  await db.runAsync(
+    'INSERT INTO progress_photos (date, photo) VALUES (?, ?) ON CONFLICT(date) DO UPDATE SET photo = excluded.photo',
+    date,
+    photo
+  );
+  return previous?.photo ?? null;
+}
+
+export async function deleteProgressPhoto(db: SQLiteDatabase, date: string) {
+  await db.runAsync('DELETE FROM progress_photos WHERE date = ?', date);
 }

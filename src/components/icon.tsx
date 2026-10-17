@@ -8,6 +8,7 @@ type SymbolName = Exclude<SymbolViewProps['name'], string>;
 const ICONS = {
   add: { ios: 'plus', android: 'add' },
   play: { ios: 'play.fill', android: 'play_arrow' },
+  pause: { ios: 'pause.fill', android: 'pause' },
   trash: { ios: 'trash', android: 'delete' },
   check: { ios: 'checkmark', android: 'check' },
   skip: { ios: 'forward.end.fill', android: 'skip_next' },

@@ -53,6 +53,21 @@ export type Reminder = {
   takenAt: number | null;
 };
 
+/** The body weight logged on a day. */
+export type WeightEntry = {
+  /** Local day, `YYYY-MM-DD`. */
+  date: string;
+  kg: number;
+};
+
+/** The body photo taken on a day. */
+export type ProgressPhoto = {
+  /** Local day, `YYYY-MM-DD`. */
+  date: string;
+  /** File name inside the app's image directory (see `lib/images`). */
+  photo: string;
+};
+
 export type Settings = {
   restSeconds: number;
   themeMode: ThemeMode;

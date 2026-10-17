@@ -1,6 +1,6 @@
 import type { SQLiteDatabase } from 'expo-sqlite';
 
-const LATEST_VERSION = 1;
+const LATEST_VERSION = 2;
 
 export async function migrateDbIfNeeded(db: SQLiteDatabase) {
   // Foreign keys are off by default and the setting is per connection.
@@ -69,6 +69,21 @@ export async function migrateDbIfNeeded(db: SQLiteDatabase) {
       );
     `);
     version = 1;
+  }
+
+  if (version === 1) {
+    await db.execAsync(`
+      CREATE TABLE weights (
+        date TEXT PRIMARY KEY NOT NULL,
+        kg REAL NOT NULL
+      );
+
+      CREATE TABLE progress_photos (
+        date TEXT PRIMARY KEY NOT NULL,
+        photo TEXT NOT NULL
+      );
+    `);
+    version = 2;
   }
 
   await db.execAsync(`PRAGMA user_version = ${LATEST_VERSION}`);

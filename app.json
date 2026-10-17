@@ -43,8 +43,8 @@
       [
         "expo-image-picker",
         {
-          "photosPermission": "O TrainTracker usa suas fotos para o mapa da academia e as fotos dos aparelhos.",
-          "cameraPermission": "O TrainTracker usa a câmera para fotografar os aparelhos e o mapa da academia.",
+          "photosPermission": "O TrainTracker usa suas fotos para o mapa da academia, as fotos dos aparelhos e as fotos de progresso.",
+          "cameraPermission": "O TrainTracker usa a câmera para fotografar os aparelhos, o mapa da academia e o seu progresso.",
           "microphonePermission": false
         }
       ]
